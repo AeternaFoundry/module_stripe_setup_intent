@@ -287,5 +287,157 @@ EOT
     usage          = optional(string)
     use_stripe_sdk = optional(bool)
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.automatic_payment_methods == null || (v.automatic_payment_methods.allow_redirects == null || (contains(["always", "never"], v.automatic_payment_methods.allow_redirects)))
+      )
+    ])
+    error_message = "must be one of: \"always\", \"never\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.acss_debit == null || (v.payment_method_options.acss_debit.currency == null || (contains(["cad", "usd"], v.payment_method_options.acss_debit.currency))))
+      )
+    ])
+    error_message = "must be one of: \"cad\", \"usd\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.acss_debit == null || (v.payment_method_options.acss_debit.mandate_options == null || (v.payment_method_options.acss_debit.mandate_options.payment_schedule == null || (contains(["combined", "interval", "sporadic"], v.payment_method_options.acss_debit.mandate_options.payment_schedule)))))
+      )
+    ])
+    error_message = "must be one of: \"combined\", \"interval\", \"sporadic\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.acss_debit == null || (v.payment_method_options.acss_debit.mandate_options == null || (v.payment_method_options.acss_debit.mandate_options.transaction_type == null || (contains(["business", "personal"], v.payment_method_options.acss_debit.mandate_options.transaction_type)))))
+      )
+    ])
+    error_message = "must be one of: \"business\", \"personal\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.acss_debit == null || (v.payment_method_options.acss_debit.verification_method == null || (contains(["automatic", "instant", "microdeposits"], v.payment_method_options.acss_debit.verification_method))))
+      )
+    ])
+    error_message = "must be one of: \"automatic\", \"instant\", \"microdeposits\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.card == null || (v.payment_method_options.card.mandate_options == null || (contains(["fixed", "maximum"], v.payment_method_options.card.mandate_options.amount_type))))
+      )
+    ])
+    error_message = "must be one of: \"fixed\", \"maximum\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.card == null || (v.payment_method_options.card.mandate_options == null || (contains(["day", "month", "sporadic", "week", "year"], v.payment_method_options.card.mandate_options.interval))))
+      )
+    ])
+    error_message = "must be one of: \"day\", \"month\", \"sporadic\", \"week\", \"year\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.card == null || (v.payment_method_options.card.network == null || (contains(["amex", "cartes_bancaires", "diners", "discover", "eftpos_au", "girocard", "interac", "jcb", "link", "mastercard", "unionpay", "unknown", "visa"], v.payment_method_options.card.network))))
+      )
+    ])
+    error_message = "must be one of: \"amex\", \"cartes_bancaires\", \"diners\", \"discover\", \"eftpos_au\", \"girocard\", \"interac\", \"jcb\", \"link\", \"mastercard\", \"unionpay\", \"unknown\", \"visa\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.card == null || (v.payment_method_options.card.request_three_d_secure == null || (contains(["any", "automatic", "challenge"], v.payment_method_options.card.request_three_d_secure))))
+      )
+    ])
+    error_message = "must be one of: \"any\", \"automatic\", \"challenge\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.payto == null || (v.payment_method_options.payto.mandate_options == null || (v.payment_method_options.payto.mandate_options.amount_type == null || (contains(["fixed", "maximum"], v.payment_method_options.payto.mandate_options.amount_type)))))
+      )
+    ])
+    error_message = "must be one of: \"fixed\", \"maximum\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.payto == null || (v.payment_method_options.payto.mandate_options == null || (v.payment_method_options.payto.mandate_options.payment_schedule == null || (contains(["adhoc", "annual", "daily", "fortnightly", "monthly", "quarterly", "semi_annual", "weekly"], v.payment_method_options.payto.mandate_options.payment_schedule)))))
+      )
+    ])
+    error_message = "must be one of: \"adhoc\", \"annual\", \"daily\", \"fortnightly\", \"monthly\", \"quarterly\", \"semi_annual\", \"weekly\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.payto == null || (v.payment_method_options.payto.mandate_options == null || (v.payment_method_options.payto.mandate_options.purpose == null || (contains(["dependant_support", "government", "loan", "mortgage", "other", "pension", "personal", "retail", "salary", "tax", "utility"], v.payment_method_options.payto.mandate_options.purpose)))))
+      )
+    ])
+    error_message = "must be one of: \"dependant_support\", \"government\", \"loan\", \"mortgage\", \"other\", \"pension\", \"personal\", \"retail\", \"salary\", \"tax\", \"utility\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.pix == null || (v.payment_method_options.pix.mandate_options == null || (v.payment_method_options.pix.mandate_options.amount_includes_iof == null || (contains(["always", "never"], v.payment_method_options.pix.mandate_options.amount_includes_iof)))))
+      )
+    ])
+    error_message = "must be one of: \"always\", \"never\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.pix == null || (v.payment_method_options.pix.mandate_options == null || (v.payment_method_options.pix.mandate_options.amount_type == null || (contains(["fixed", "maximum"], v.payment_method_options.pix.mandate_options.amount_type)))))
+      )
+    ])
+    error_message = "must be one of: \"fixed\", \"maximum\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.pix == null || (v.payment_method_options.pix.mandate_options == null || (v.payment_method_options.pix.mandate_options.payment_schedule == null || (contains(["halfyearly", "monthly", "quarterly", "weekly", "yearly"], v.payment_method_options.pix.mandate_options.payment_schedule)))))
+      )
+    ])
+    error_message = "must be one of: \"halfyearly\", \"monthly\", \"quarterly\", \"weekly\", \"yearly\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.upi == null || (v.payment_method_options.upi.mandate_options == null || (v.payment_method_options.upi.mandate_options.amount_type == null || (contains(["fixed", "maximum"], v.payment_method_options.upi.mandate_options.amount_type)))))
+      )
+    ])
+    error_message = "must be one of: \"fixed\", \"maximum\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.upi == null || (v.payment_method_options.upi.setup_future_usage == null || (contains(["none", "off_session", "on_session"], v.payment_method_options.upi.setup_future_usage))))
+      )
+    ])
+    error_message = "must be one of: \"none\", \"off_session\", \"on_session\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.us_bank_account == null || (v.payment_method_options.us_bank_account.mandate_options == null || (v.payment_method_options.us_bank_account.mandate_options.collection_method == null || (contains(["paper"], v.payment_method_options.us_bank_account.mandate_options.collection_method)))))
+      )
+    ])
+    error_message = "must be one of: \"paper\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.setup_intents : (
+        v.payment_method_options == null || (v.payment_method_options.us_bank_account == null || (v.payment_method_options.us_bank_account.verification_method == null || (contains(["automatic", "instant", "microdeposits"], v.payment_method_options.us_bank_account.verification_method))))
+      )
+    ])
+    error_message = "must be one of: \"automatic\", \"instant\", \"microdeposits\""
+  }
 }
 
